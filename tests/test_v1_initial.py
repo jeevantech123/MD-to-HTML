@@ -193,7 +193,8 @@ class TestCommandLine(unittest.TestCase):  # R1, R2, R3, errors
         self.assertTrue(out.exists())
         html = out.read_text(encoding="utf-8")
         self.assertIn("<h1>Hi</h1>", html)
-        self.assertIn("<title>notes</title>", html)
+        # Title comes from the first heading since change 01 (was the file name).
+        self.assertIn("<title>Hi</title>", html)
 
     def test_custom_output_name(self):  # R3
         md = self.write_md()

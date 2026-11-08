@@ -167,14 +167,32 @@ def convert_markdown(markdown):
     return "\n".join(blocks)
 
 
+HEADING_HTML_RE = re.compile(r"<h[1-6]>(.*?)</h[1-6]>")
+TAG_RE = re.compile(r"<[^>]+>")
+
+
+def page_title(body, fallback):
+    """Text of the first non-empty heading in the converted body, else fallback.
+
+    Searching the HTML (not the Markdown) means a "# line" inside a code block
+    is never picked, because code is escaped and holds no real tags. The
+    result is already escaped, so tags are stripped but entities kept.
+    """
+    for match in HEADING_HTML_RE.finditer(body):
+        text = TAG_RE.sub("", match.group(1)).strip()
+        if text:
+            return text
+    return escape(fallback)
+
+
 def build_page(body, title):
-    """Wrap converted content in a complete HTML page."""
+    """Wrap converted content in a complete HTML page. title must be escaped."""
     return (
         "<!DOCTYPE html>\n"
         "<html>\n"
         "<head>\n"
         '<meta charset="utf-8">\n'
-        f"<title>{escape(title)}</title>\n"
+        f"<title>{title}</title>\n"
         "</head>\n"
         "<body>\n"
         f"{body}\n"
@@ -246,7 +264,8 @@ def main(argv=None):
     if output_path.exists() and output_path.resolve() == input_path.resolve():
         fail(f"output file would overwrite the input file: {output_path}")
 
-    page = build_page(convert_markdown(markdown), title=input_path.stem)
+    body = convert_markdown(markdown)
+    page = build_page(body, title=page_title(body, fallback=input_path.stem))
     try:
         write_atomically(output_path, page)
     except OSError as exc:

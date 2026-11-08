@@ -78,3 +78,18 @@ Add new records at the bottom and don't rewrite old ones. If a decision is rever
 - **Date:** 2026-11-08
 - **Observation:** CLAUDE.md says to test a missing input file "(R10)", but `problem.md` only lists R1 to R8, and the "Requirement" column in the spec table is empty.
 - **Decision:** The "Errors" section of the spec is treated as R10, and the missing-file tests are tagged `# R10`. `problem.md` and `spec.md` weren't edited.
+
+## D15. Page title is the first heading (replaces D8)
+- **Date:** 2026-11-08
+- **Decision:** `<title>` is the text of the first non-empty heading of any level, with inline markup removed (`# A **big** deal` gives `A big deal`). If there's no heading, the title falls back to the input file name without its extension, as in D8.
+- **Why:** The user chose this. A heading describes the document better than its file name.
+- **How:** `page_title()` searches the *converted* HTML for the first `<hN>` tag. All code is escaped and contains no real tags, so a `# line` inside a code block can never become the title. The heading HTML is already escaped, so removing the tags leaves correctly escaped text.
+- **Tests:** `tests/test_change_01_title_from_heading.py`. One v1 test that expected the file name as the title was updated.
+
+## D16. Overwrite protection kept (confirms D12)
+- **Date:** 2026-11-08
+- **Decision:** The user confirmed that refusing to overwrite the input file stays in.
+
+## D17. CLAUDE.md no longer mentions "R10" (follows up D14)
+- **Date:** 2026-11-08
+- **Observation:** CLAUDE.md now says "Also test a missing input file" without the "(R10)" label. The `# R10` comments in `tests/test_v1_initial.py` now just mark the spec's "Errors" section. Missing-file tests still run as part of the full test suite.
