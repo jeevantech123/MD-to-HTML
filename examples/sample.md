@@ -11,6 +11,10 @@ It continues on a second line.
 1. Step one
 2. Step **two**
 
+- Spaced one
+
+- Spaced two
+
 ### Code
 
 ```python

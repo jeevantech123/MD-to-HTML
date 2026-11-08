@@ -116,8 +116,19 @@ def read_code_block(lines, i):
     return f"<pre><code>{code}</code></pre>", i
 
 
+def skip_blank_lines(lines, i):
+    """Index of the first non-blank line at or after i."""
+    while i < len(lines) and not lines[i].strip():
+        i += 1
+    return i
+
+
 def read_list(lines, i):
-    """Read consecutive list items of the same kind starting at lines[i]."""
+    """Read list items of the same kind starting at lines[i].
+
+    Blank lines between items do not end the list: if the next non-blank
+    line is an item of the same kind, the list carries on.
+    """
     tag, _ = list_item(lines[i])
     items = []
     while i < len(lines):
@@ -126,6 +137,10 @@ def read_list(lines, i):
             break
         items.append(f"  <li>{convert_inline(item[1].strip())}</li>")
         i += 1
+        after_blanks = skip_blank_lines(lines, i)
+        next_item = after_blanks < len(lines) and list_item(lines[after_blanks])
+        if next_item and next_item[0] == tag:
+            i = after_blanks
     return "\n".join([f"<{tag}>", *items, f"</{tag}>"]), i
 
 

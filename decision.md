@@ -93,3 +93,10 @@ Add new records at the bottom and don't rewrite old ones. If a decision is rever
 ## D17. CLAUDE.md no longer mentions "R10" (follows up D14)
 - **Date:** 2026-11-08
 - **Observation:** CLAUDE.md now says "Also test a missing input file" without the "(R10)" label. The `# R10` comments in `tests/test_v1_initial.py` now just mark the spec's "Errors" section. Missing-file tests still run as part of the full test suite.
+
+## D18. Blank lines between list items keep one list (amends D6)
+- **Date:** 2026-11-08
+- **Decision:** After each list item, `read_list()` skips any blank lines and checks the next line. If it's an item of the same kind (`-`/`*` for `<ul>`, `N.` for `<ol>`), the list continues. Anything else (a different kind of item, a paragraph, a heading, a fence, or the end of the file) ends the list, and the blank lines are left for the main loop.
+- **Why:** The user chose this. People often put a blank line between items, and two separate lists in the HTML would be wrong.
+- **Unchanged from D6:** Nested lists and continuation lines are still not supported. A text line directly under an item still ends the list. `<li>` contents are not wrapped in `<p>`, so a spaced-out list looks the same as a tight one.
+- **Tests:** `tests/test_change_02_merge_lists.py`. `examples/sample.md` now includes a spaced-out list.

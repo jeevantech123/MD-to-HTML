@@ -3,21 +3,23 @@
 Read this first if you're a new session picking up the project.
 
 ## Status (2026-11-08)
-- **Iteration 1 is complete.** Everything in `spec.md` is built in `md2html.py`.
-- **45 tests pass:** `python3 -m unittest discover -s tests -v` (on this Windows machine, use `python`; see the environment notes below).
+- **Iteration 1 and changes 01 and 02 are complete.** Everything in `spec.md` is built in `md2html.py`. The page title now comes from the first heading, and blank lines between list items no longer split the list.
+- **73 tests pass:** `python3 -m unittest discover -s tests -v` (on this Windows machine, use `python`; see the environment notes below).
 - Nothing is in progress.
 
 ## Read these, in this order
 1. `CLAUDE.md`: the rules. Standard library only, one file, commit after major changes, test after each change, and **do not edit `problem.md`**.
 2. `problem.md`: the requirements, R1 to R8.
 3. `spec.md`: what to build. If the spec and the code disagree, **ask the user before changing either**.
-4. `decision.md`: why things are the way they are (D1 to D14).
+4. `decision.md`: why things are the way they are (D1 to D18). Later records replace earlier ones (D15 replaces D8, D18 amends D6).
 
 ## Files
 | File | Purpose |
 |---|---|
 | `md2html.py` | The whole program |
 | `tests/test_v1_initial.py` | Tests for iteration 1, grouped by requirement |
+| `tests/test_change_01_title_from_heading.py` | Change 01: the title comes from the first heading |
+| `tests/test_change_02_merge_lists.py` | Change 02: blank lines between items keep one list |
 | `examples/sample.md` | Sample input for manual checks and the end-to-end test |
 | `README.md` | What the program does, how to run it, how to test it |
 | `decision.md` | Decision records |
@@ -26,6 +28,8 @@ Read this first if you're a new session picking up the project.
 ## How `md2html.py` works
 - `main()` parses the arguments, checks that the input exists and can be read, refuses to overwrite the input, then builds the page and calls `write_atomically()`.
 - `convert_markdown()` walks the lines once. Each line is checked in this order: blank, heading (`HEADING_RE`), fence (`read_code_block`), list (`read_list`), paragraph (`read_paragraph`).
+- `read_list()` looks past blank lines. If the next non-blank line is an item of the same kind, the list continues (D18).
+- `page_title()` takes the first non-empty `<hN>` from the converted body, with tags stripped. If there's none, it uses the input file name (D15).
 - `convert_inline()` splits out code spans first, escapes the rest, then runs `format_links_and_emphasis()` (links, then bold, then italic).
 - `build_page()` wraps the result in a doctype, `<html>`, `<head>` (charset and title), and `<body>`.
 
@@ -43,11 +47,12 @@ Read this first if you're a new session picking up the project.
 - Inside the Bash tool, heredocs turn `\n` inside Python strings into real newlines. Use the Edit tool for code changes.
 
 ## Open questions for the user
-- `<title>` is the input file name (D8). Should it be the first heading instead?
-- `- a`, a blank line, then `- b` produces two lists (D6). Is that acceptable?
+- Resolved 2026-11-08: the title comes from the first heading (D15), spaced-out lists merge (D18), and overwrite protection stays (D16).
 - `problem.md` and `spec.md` contain backslash escapes (`\#`, `\*\*bold\*\*`) that look like copy-paste artifacts. They weren't edited, per the rules.
 
 ## Change log
 | # | Date | Change | Tests |
 |---|---|---|---|
 | 1 | 2026-11-08 | Initial build of everything in spec.md | `tests/test_v1_initial.py` (45) |
+| 2 | 2026-11-08 | Change 01: `<title>` comes from the first heading, falling back to the file name | `tests/test_change_01_title_from_heading.py` (14) |
+| 3 | 2026-11-08 | Change 02: blank lines between list items of the same kind keep one list | `tests/test_change_02_merge_lists.py` (14) |

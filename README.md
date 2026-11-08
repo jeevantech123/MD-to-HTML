@@ -18,6 +18,8 @@ It is one Python 3 file (`md2html.py`) that uses only the standard library: no i
 
 `<`, `>` and `&` in your text are escaped so they show as text in the browser, and nothing inside code is converted.
 
+Blank lines between list items of the same kind don't split the list. The page `<title>` is the first heading in the file. If the file has no headings, the title is the file name.
+
 ## Run it
 
 ```
@@ -43,10 +45,12 @@ All tests, in one command (run it from the project folder):
 python3 -m unittest discover -s tests -v
 ```
 
-Only the first-iteration tests:
+Only the tests for one iteration or change:
 
 ```
-python3 -m unittest tests.test_v1_initial -v
+python3 -m unittest tests.test_v1_initial -v                     # first build
+python3 -m unittest tests.test_change_01_title_from_heading -v   # title from first heading
+python3 -m unittest tests.test_change_02_merge_lists -v          # spaced-out lists stay one list
 ```
 
 The tests use only Python's built-in `unittest`, so there's nothing to install. Each later change to the project gets its own `tests/test_change_NN_<name>.py` file, and the "all tests" command above runs those too.
