@@ -58,5 +58,5 @@ Do not edit `problem.md`. If the spec and the code disagree, tell me before chan
 
 \- Make a commit after every major change. After building initial project, commit. If asked to make a major change to a project, do that then commit.
 
-\- After each change, run the program on a sample `.md` file and check the HTML output against the requirements it touches. Also test a missing input file (R10).
+\- After each change, run the program on a sample `.md` file and check the HTML output against the requirements it touches. Also test a missing input file.
 
