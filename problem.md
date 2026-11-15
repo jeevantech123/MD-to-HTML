@@ -1,4 +1,4 @@
-\# Problem
+# Problem
 
 
 
@@ -6,25 +6,25 @@ Students, developers, and other people often write notes or documents in markdow
 
 
 
-\# Initial requirements
+# Initial requirements
 
 
 
-\- R1. The user runs the program from the terminal and gives it a path to a markdown file
+- R1. The user runs the program from the terminal and gives it a path to a markdown file
 
-\- R2. The program writes the converted output as a HTML file
+- R2. The program writes the converted output as a HTML file
 
-\- R3. User can choose the name of the output file
+- R3. User can choose the name of the output file
 
-\- R4. Headings in markdown become HTML headings that match
+- R4. Headings in markdown become HTML headings that match
 
-\- R5. Paragraphs become HTML paragraphs
+- R5. Paragraphs become HTML paragraphs
 
-\- R6. Text such as bold and italics is converted into HTML properly
+- R6. Text such as bold and italics is converted into HTML properly
 
-\- R7. Bulleted and numbered lists are converted into HTML lists
+- R7. Bulleted and numbered lists are converted into HTML lists
 
-\- R8. Links are converted into HTML links
+- R8. Links are converted into HTML links
 
 
 
